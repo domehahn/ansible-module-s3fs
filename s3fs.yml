@@ -1,0 +1,13 @@
+- hosts: localhost
+  gather_facts: true
+  
+  tasks:
+
+    - name: mount folder to s3 bucket using s3fs
+      ansible_module_s3fs:
+        url: "http://localhost:4566"
+        bucket: "test-bucket"
+        mount: "/opt/s3fs/bucket"
+        accessKeyId: "test"
+        secretAccessKey: "test"
+        args: ""
