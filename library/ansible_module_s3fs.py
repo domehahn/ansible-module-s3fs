@@ -71,8 +71,16 @@ def getPasswdFile(module):
 def mount_bucket(module):
     s3fs_args = getAdditionalS3fsOptions(module.params['args'])
     passwd_file = getPasswdFile(module)
-    output = subprocess.run(['s3fs', s3fs_args, '-o', passwd_file, '-o', f"url={module.params['url']}", module.params['bucket'], module.params['mount']], capture_output=True, text=True).stdout
-    return output
+    command = [
+        's3fs',
+        s3fs_args,
+        '-o', passwd_file,
+        '-o', f"url={module.params['url']}",
+        module.params['bucket'],
+        module.params['mount']
+    ]
+    result = subprocess.run(command, capture_output=True, text=True).stdout
+    return result
 
 def run_module():
     # define available arguments/parameters a user can pass to the module
@@ -121,7 +129,7 @@ def run_module():
     # part where your module will do what it needs to do)
     result = mount_bucket(module)
 
-    result['message'] = 'Successfully writen to ' + result
+    result['message'] = 'Successfully mount bucket into folder.' + ''.join(result)
     result['changed'] = True
 
     # in the event of a successful module execution, you will want to
